@@ -1,5 +1,5 @@
 # LCStaminafix
-
+Hi there
 # Features
 > Make stamina regen as percentage.
 ---
