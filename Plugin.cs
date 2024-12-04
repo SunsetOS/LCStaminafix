@@ -18,26 +18,42 @@ namespace LCStaminaFix
 
         public const string PLUGIN_GUID = "sunsetos.lcstaminafix";
         public const string PLUGIN_NAME = "lcstaminafix";
-        public const string PLUGIN_VERSION = "1.0.1";
+        public const string PLUGIN_VERSION = "1.1.0";
 
+        public static ConfigEntry<float> StandConfig;
+        public static ConfigEntry<float> WalkingConfig;
 
         // private static ConfigFile configFile;
         private readonly Harmony harmony = new Harmony(PLUGIN_GUID);
 
-        private static LCStaminaFix Instance;
+        public static LCStaminaFix Instance;
 
-        internal ManualLogSource mls;
+        internal ManualLogSource log;
 
         void Awake()
         {
+
             if (Instance == null)
             {
-                Instance = this;
-                
+                Instance = this;    
             }
 
-            mls = BepInEx.Logging.Logger.CreateLogSource(PLUGIN_GUID);
-            mls.LogInfo(PLUGIN_GUID + " is here");
+            log = BepInEx.Logging.Logger.CreateLogSource(PLUGIN_GUID);
+            log = Logger;
+            log.LogInfo(PLUGIN_GUID + " has been loaded");
+
+            StandConfig = Config.Bind("General",
+                                      "StandingRegenTime",
+                                      12f,
+                                      "How long does it take for stamina to fully regen when you're standing.");
+
+            WalkingConfig = Config.Bind("General",
+                                        "WalkingRegenTime",
+                                        16f,
+                                        "How long does it take for stamina to fully regen when you're walking.");
+
+            log.LogInfo($"Walking Regen Time set to {WalkingConfig.Value}");
+            log.LogInfo($"Standing Regen Time set to {StandConfig.Value}");
 
             harmony.PatchAll(typeof(StaminaFix));
             harmony.PatchAll(typeof(LCStaminaFix));
